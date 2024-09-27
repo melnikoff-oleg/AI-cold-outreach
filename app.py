@@ -27,30 +27,51 @@ if submit_button:
         
         prompt = ''
         prompt += f"""You are a professional B2B sales manager with 10 years of experience, you are an expert in writing cold messages that convert.
-        Help me write a cold outreach message to a potential client, to make them interested in talking to me. 
+        Help me write a cold outreach message to a potential partner, that will make them interested in conversation.
         ---
         Here is a description of my intention:
-        I'm a tech expert with decent experience in software development and artificial intellegence. I quit my job and started my own company to help businesses automate their processes using AI, make their employees more efficient, save time and money. Right now I'm looking for the first company to partner with, as I want to build up my portfolio and help someone at the same time.
-        I would love to develop a custom AI solution for your company. And I'm happy to guide you in the world of AI if you need it. 
-        Examples of solutions I can develop: 1) automate data gathering and data analysis, 2) personalize content for a specific person based on their intent, 3) analyse performance of your employees and give recommendations on how to improve it, 4) automate any sort of routine tasks, 5) build a chatbot for any purpose, 6) build an internal documentation system with an easy search, 7) many other AI solutions applicable to your business.
-        In my message I wanna convey that initially I just wanna to talk, to discuss potential AI applications in their case, I don't wanna pretend being an expert, I don't wanna be sellsy, I want to have a friendly conversation first of all.
+        I'm a tech expert with decent experience in software development and artificial intellegence. I wanna know if they tried to use AI in their processes and if yes, how it worked out, are they satisfied.
+        I'm interested in what might be the problems in their industry that AI can solve and make the company more profitable. 
+        I don't wanna offer any services yet, but I wanna show them that I have one strong idea of how AI can help them.
+        The goal of my initial message is to start a conversation and make them respond.
         ---\n"""
         prompt += f"""Here is the profile of the lead you are reaching out to:
         Name: {person_profile['full_name']}. Occupation: {person_profile['occupation']}. Summary: {person_profile['summary']}
         Information about their company:
         Name: {company_profile['name']}. Industry: {company_profile['industry']}. Description: {company_profile['description']}
         ---\n"""
-        prompt += f"""Help me write a message for this lead that resonates with him and makes him interested in my service. Keep in mind my requirements:
-        - showcase a problem that their company might have and how AI can solve it
-        - introduce myself and what I want for them
+        prompt += f"""Help me write a message for this lead that resonates with him and makes him want to reply. Keep in mind my requirements:
+        - provide 1 very specific problem that their company might have and how AI can solve it - as my hypothesis and that I don't know if it's true
         - keep it short and to the point, at max 100 words
-        - make the message personalized, but don't be dishonest or insincere, don't you ever say you followed their career
         - make attention-grabbing opening
-        - showcase how they can make more profit by integrating AI
-        - showcase that I'm happy to navigate and just talk to them
-        - add a very clear call to action: ask if they have tried and found value in using AI to improve their processes.
         - WRITE IMPERFECTLY, LIKE A HUMAN. IF THE PROSPECT WILL RECOGNISE YOU AS A BOT, THEY WILL KILL YOU
-        At first brainstorm what might be specific problems and solutions the lead might face. Reason and make a chain of thought. Then write the message itself.
+        - USE SIMPLE, THE MOST POPULAR ENGLISH WORDS
+        - GO STRAIGHT TO THE POINT, AVOID ANY COMPLIMENTS TO THEIR COMPANY OR SAYING THAT I FOLLOWED THEM FOR A LONG TIME
+        - don't use capitalisation as in examples, use small letters everywhere
+
+        Here are 3 examples of how the final message should look like, imitate the style as close as possible:
+
+        Subject: AI is absolutely useless in <their industry>
+        Body: hey Jacob, I was looking for someone in <their industry> and found you. 
+        do you know by any chance, are there any valuable AI applications in your business?
+        maybe you tried something yourself. I though about <custom idea>, but I have no idea if it's really valuable.
+        would be grateful for any advice.
+
+        Subject: "AI might kick me out of business" (with quotes)
+        Body: hi Jennifer, I'm looking to talk to someone in <their industry> about the application of AI. 
+        seems like you might be a right person.
+        I'm no expert in <their industry> as you are, but I'm experienced with software engineering and AI and would love to have a chat.
+        are you down to it? or maybe you know someone who would be interested?
+
+        Subject: "AI is a scam" (with quotes)
+        Body: hi Alex, I'm a software engineer with a decent experience in AI.
+        I'm curious, have you tried to use AI in your business?
+        I have a hypothesis that it can solve <specific problem>, but I'm not sure if it's true.
+        would love to hear your thoughts on this.
+
+        Now brainstorm about how to write a catchy subject and opening line, prove that you're a genius here! Then brainstorm about the specific problem that AI can solve for them.
+        Write your ideas.
+        Then write 5 highly diverse options for the message. Gauge each of them in terms of how likely they will get a response, and how human they sound. Then choose the best one of them.
         ---\n"""
 
         completion = openai_client.chat.completions.create(
