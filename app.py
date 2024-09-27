@@ -7,7 +7,16 @@ openai_client = OpenAI(api_key=os.getenv("OPENAI_TOKEN"))
 
 # profile_url = 'https://www.linkedin.com/in/nycgareth/'
 
-st.title("AI-Enhanced Cold Outreach Tool")
+# st.title("ConnectAI")
+
+# Text logo styled as large, bold text
+st.markdown("<h1 style='text-align: left; color: #4A90E2;'>ConnectAI</h1>", unsafe_allow_html=True)
+
+# Header for the main title
+st.header("Generate Personalized Outreach Messages Instantly")
+
+# Subheading for additional information
+st.subheader("Connect meaningfully with your audience using AI-powered personalization.")
 
 with st.form("profile_url"):
     profile_url = st.text_input("Enter LinkedIn profile URL:")
