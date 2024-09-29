@@ -245,7 +245,7 @@ def generate_messages(linkedin_url, goal, example_message):
             prompt += "---\n"
             prompt += "Now brainstorm about how to write a catchy subject and opening line, then brainstorm personalization ideas specifically to this lead.\n"
             prompt += "Then write 6 highly diverse options for the message.\n"
-            prompt += "Gauge each of them in terms of how likely they will get a response and how human they sound. Then choose the top 3 of them and print them in the following format: ---Best Options---'newline x2'Option 1'newline'Subject: ...'newline'Body: ... 'newline x2'Option 2...\n"
+            prompt += "Gauge each of them in terms of how likely they will get a response and how human they sound. Then choose the top 3 of them and print them in the following format: ---Best Options---'newline x2'Option 1'newline'Subject: ...'newline'Body: ... 'newline x2'Option 2... And nothing else after the last option.\n"
             prompt += "Start working:\n"
 
             # Call OpenAI API to get the messages
@@ -267,31 +267,31 @@ def generate_messages(linkedin_url, goal, example_message):
             time.sleep(1)
 
         # Display messages
-        st.markdown("<h3 style='text-align: center; color: #333333;'>Your Personalized Message</h3>", unsafe_allow_html=True)
+        st.markdown("<h3 style='text-align: center; color: #333333;'>Your Personalized Message Options</h3>", unsafe_allow_html=True)
         for idx, message in enumerate(messages, 1):
+            message = '\n'.join(message.split('\n')[1:])
+            message = message.replace('\n', '<br>')
             st.markdown(f"""
             <div style='background-color: #F5F5F5; padding: 20px; border: 1px solid #DDDDDD; border-radius: 5px; margin-bottom: 20px;'>
                 <p style='font-size: 16px; color: #333333;'>{message}</p>
-                <button onclick="copyToClipboard('message{idx}')" style='background: none; border: none; color: #4A90E2; cursor: pointer; float: right;'>Copy Message</button>
                 <div style='clear: both;'></div>
-            </div>
-            """, unsafe_allow_html=True)
+            </div>""", unsafe_allow_html=True)
             st.markdown(f"<textarea id='message{idx}' style='display:none;'>{message}</textarea>", unsafe_allow_html=True)
 
         # Include JavaScript for copy functionality
-        copy_js = """
-        <script>
-        function copyToClipboard(elementId) {
-            var copyText = document.getElementById(elementId);
-            navigator.clipboard.writeText(copyText.value).then(function() {
-                alert('Message copied to clipboard');
-            }, function(err) {
-                alert('Could not copy text: ', err);
-            });
-        }
-        </script>
-        """
-        st.markdown(copy_js, unsafe_allow_html=True)
+        # copy_js = """
+        # <script>
+        # function copyToClipboard(elementId) {
+        #     var copyText = document.getElementById(elementId);
+        #     navigator.clipboard.writeText(copyText.value).then(function() {
+        #         alert('Message copied to clipboard');
+        #     }, function(err) {
+        #         alert('Could not copy text: ', err);
+        #     });
+        # }
+        # </script>
+        # """
+        # st.markdown(copy_js, unsafe_allow_html=True)
 
         # Regenerate and Edit Inputs Buttons
         col1, col2 = st.columns(2)
