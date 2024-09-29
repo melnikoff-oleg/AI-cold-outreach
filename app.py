@@ -278,21 +278,6 @@ def generate_messages(linkedin_url, goal, example_message):
             </div>""", unsafe_allow_html=True)
             st.markdown(f"<textarea id='message{idx}' style='display:none;'>{message}</textarea>", unsafe_allow_html=True)
 
-        # Include JavaScript for copy functionality
-        # copy_js = """
-        # <script>
-        # function copyToClipboard(elementId) {
-        #     var copyText = document.getElementById(elementId);
-        #     navigator.clipboard.writeText(copyText.value).then(function() {
-        #         alert('Message copied to clipboard');
-        #     }, function(err) {
-        #         alert('Could not copy text: ', err);
-        #     });
-        # }
-        # </script>
-        # """
-        # st.markdown(copy_js, unsafe_allow_html=True)
-
         # Regenerate and Edit Inputs Buttons
         col1, col2 = st.columns(2)
         with col1:
