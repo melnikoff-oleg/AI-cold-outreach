@@ -1,9 +1,8 @@
 import streamlit as st
-import time
 from openai import OpenAI
 import requests
+import time
 import os
-import threading
 
 # Set OpenAI API key
 openai_client = OpenAI(api_key=os.getenv("OPENAI_TOKEN"))
@@ -93,8 +92,27 @@ def main():
         },
         "💼 B2B Sales Outreach": {
             "linkedin_url": "https://www.linkedin.com/in/nycgareth/",
-            "goal": "Introduce our new SaaS platform that can help optimize their business processes and propose a demo meeting.",
-            "example": "Hello [Name], our platform has helped companies like yours increase efficiency by 30%. I'd love to show you how.",
+            "goal": """My name is Jason, I'm a CEO of a company called Fluently, it's an AI English coach. Fluently delivers instant feedback on your daily video calls, so you can master English every day. 
+Our app helps non-native English speakers improve their language skills by providing feedback on pronunciation, grammar and vocabulary after their daily video calls.
+Right now we're focused on reaching out big international companies.
+How to write the message:
+- It's a LinkedIn message, so include Subject and Body.
+- Keep messages short and to the point, ideally not more than 100 words.
+- Make an attention-grabbing opening, so the lead can't help but read it.
+- USE THE MOST SIMPLE ENGLISH WORDS.
+- WRITE SIMPLE, SHORT SENTENCES.
+- USE EXECATLY THE STYLE THAT I PROVIDED IN THE EXAMPLES.""",
+            "example": """Example 1
+
+Subject: Exploring Synergies in [Prospect's Industry]
+
+Body: Hi [Prospect's Name],
+I hope this message finds you well. I recently came across your profile while researching leaders in the [Prospect's Industry], and I was impressed by your work at [Prospect's Company].
+At [Your Company], we specialize in [Your Company's Solution], which has helped companies like [Example Company] achieve [Specific Benefit/Result]. Given your focus on [Prospect's Area of Interest], I believe there might be a valuable opportunity for us to collaborate.
+Would you be open to a brief call to explore how we can support your goals at [Prospect's Company]? I'm available for a call next week and would love to hear your thoughts.
+Looking forward to the possibility of working together.
+Best regards,
+Jason, CEO, Fluently""",
             "key": "B2B Sales Outreach"
         },
         "🤝 Customer Development": {
@@ -222,7 +240,7 @@ def generate_messages(is_generate_more):
         if not is_generate_more or st.session_state.profile_data is None:
             # Step 1: Fetching LinkedIn profile
             progress_text.text("🔍 Fetching LinkedIn profile...")
-            progress_bar.progress(5)
+            progress_bar.progress(33)
             headers = {'Authorization': 'Bearer ' + os.getenv("PROXYCURL_TOKEN")}
             api_endpoint = 'https://nubela.co/proxycurl/api/v2/linkedin'
             params = {'url': st.session_state.linkedin_url}
@@ -232,19 +250,19 @@ def generate_messages(is_generate_more):
                 return
             person_profile = response.json()
             st.session_state.profile_data = person_profile
-            time.sleep(1)  # Reduced sleep time for first step
+            # time.sleep(1)  # Reduced sleep time for first step
         else:
             person_profile = st.session_state.profile_data
 
         # Step 2: Analyzing your goal
-        progress_text.text("🎯 Analyzing your goal...")
-        progress_bar.progress(20)
-        time.sleep(0.5)
+        # progress_text.text("🎯 Analyzing your goal...")
+        # progress_bar.progress(20)
+        # time.sleep(0.5)
 
         # Step 3: Fetching company information
         if not is_generate_more or st.session_state.company_data is None:
             progress_text.text("🏢 Fetching company information...")
-            progress_bar.progress(35)
+            progress_bar.progress(66)
             company_profile = {}
             if 'experiences' in person_profile and person_profile['experiences']:
                 experiences = person_profile['experiences']
@@ -266,118 +284,91 @@ def generate_messages(is_generate_more):
             else:
                 company_profile = {}
             st.session_state.company_data = company_profile
-            time.sleep(1)
+            # time.sleep(1)
         else:
             company_profile = st.session_state.company_data
 
         # Step 4: Brainstorming ideas
-        progress_text.text("💡 Brainstorming ideas...")
-        progress_bar.progress(50)
-        time.sleep(1)
+        # progress_text.text("💡 Brainstorming ideas...")
+        # progress_bar.progress(50)
+        # time.sleep(1)
 
         # Step 5: Generating messages
-        progress_text.text("✍️ Generating messages...")
-        progress_bar.progress(65)
+        # progress_text.text("✍️ Generating messages...")
+        # progress_bar.progress(65)
 
         # Build the prompt
-        prompt = ""
-        prompt += f"You are a professional with expertise in crafting cold outreach messages that convert.\n"
-        prompt += "Help me write a cold outreach message to a potential partner that will make them interested in conversation.\n"
-        prompt += "---\n"
-        prompt += "Here is a description of my intention:\n"
-        prompt += f"{st.session_state.goal}\n"
-        prompt += "---\n"
-        prompt += "Here is the profile of the lead you are reaching out to:\n"
-        prompt += f"Name: {person_profile.get('full_name', 'N/A')}.\n"
-        prompt += f"Occupation: {person_profile.get('occupation', 'N/A')}.\n"
-        summary = person_profile.get('summary', '')
-        if summary:
-            prompt += f"Summary: {summary}\n"
-        if company_profile:
-            prompt += "Information about their company:\n"
-            prompt += f"Name: {company_profile.get('name', 'N/A')}.\n"
-            industry = company_profile.get('industry', '')
-            if industry:
-                prompt += f"Industry: {industry}.\n"
-            description = company_profile.get('description', '')
-            if description:
-                prompt += f"Description: {description}\n"
-        prompt += "---\n"
-        prompt += "Help me write a message for this lead that resonates with them and makes them want to reply. Keep in mind my requirements:\n"
-        prompt += "- Keep it short and to the point, at max 100 words.\n"
-        prompt += "- Make an attention-grabbing opening.\n"
-        prompt += "- Write naturally, like a human. Avoid sounding like a bot.\n"
-        prompt += "- Use simple, common English words.\n"
-        prompt += "- Go straight to the point, avoid any compliments or saying that I followed them for a long time.\n"
-        if st.session_state.example_message:
-            prompt += "---\n"
-            prompt += "Here is an example message that I like; imitate the style as closely as possible:\n"
-            prompt += f"{st.session_state.example_message}\n"
-        prompt += "---\n"
-        prompt += "Now brainstorm about how to write a catchy subject and opening line, then brainstorm personalization ideas specifically to this lead.\n"
-        prompt += "Then write 6 highly diverse options for the message.\n"
-        prompt += "Gauge each of them in terms of how likely they will get a response and how human they sound. Then choose the top 3 of them and print them in the following format: ---Best Options---'newline x2'Option 1'newline'Subject: ...'newline'Body: ... 'newline x2'Option 2... And nothing else after the last option.\n"
-        prompt += "Start working:\n"
+        prompt = f"""You are a professional B2B sales rep with 10 years of experience in crafting cold outreach messages that convert. You worked with billion-dollar clients like Google, Apple, and Facebook.
+Help me write a cold outreach message for a potential client that will make them interested in conversation.
+I will give you:
+1) Information about the lead we are reaching out to
+2) My objective and requirements for this cold outreach
+3) Example messages
+Then you will:
+1) Brainstorm
+2) Write high-quality messages
 
-        # Call OpenAI API to get the messages
-        def call_openai_api():
-            nonlocal ai_response
-            completion = openai_client.chat.completions.create(
-                messages=[
-                    {
-                        "role": "user",
-                        "content": prompt,
-                    }
-                ],
-                model="gpt-4",
-            )
-            ai_response = completion.choices[0].message.content
+Information about the lead we are reaching out to:
+Lead's Name: {person_profile['full_name']}
+Occupation: {person_profile['occupation']}
+Summary: {person_profile['summary']}
+Information about their company:
+Company Name: {company_profile['name']}
+Industry: {company_profile['industry']}
+Description: {company_profile['description']}
 
-        ai_response = ""
-        api_thread = threading.Thread(target=call_openai_api)
-        api_thread.start()
+My objective and requirements for this cold outreach:
+My name is Jason, I'm a CEO of a company called Fluently, it's an AI English coach. Fluently delivers instant feedback on your daily video calls, so you can master English every day. 
+Our app helps non-native English speakers improve their language skills by providing feedback on pronunciation, grammar and vocabulary after their daily video calls.
+Right now we're focused on reaching out big international companies.
+How to write the message:
+- It's a LinkedIn message, so include Subject and Body.
+- Keep messages short and to the point, ideally not more than 100 words.
+- Make an attention-grabbing opening, so the lead can't help but read it.
+- USE THE MOST SIMPLE ENGLISH WORDS.
+- WRITE SIMPLE, SHORT SENTENCES.
+- USE EXECATLY THE STYLE THAT I PROVIDED IN THE EXAMPLES.
 
-        # While the API call is processing, update progress
-        progress = 65
-        messages_during_wait = [
-            "🔄 Refining language and tone...",
-            "🔄 Tailoring content to the recipient...",
-            "🔄 Finalizing message drafts..."
-        ]
-        message_index = 0
-        while api_thread.is_alive():
-            progress += 1
-            progress_bar.progress(progress)
-            progress_text.text(messages_during_wait[message_index % len(messages_during_wait)])
-            time.sleep(3)
-            message_index +=1
-            if progress >= 95:
-                progress = 95
-        api_thread.join()
+Example messages:
 
-        progress_text.text("✅ Completed!")
+Example 1
+
+Subject: Exploring Synergies in [Prospect's Industry]
+
+Body: Hi [Prospect's Name],
+I hope this message finds you well. I recently came across your profile while researching leaders in the [Prospect's Industry], and I was impressed by your work at [Prospect's Company].
+At [Your Company], we specialize in [Your Company's Solution], which has helped companies like [Example Company] achieve [Specific Benefit/Result]. Given your focus on [Prospect's Area of Interest], I believe there might be a valuable opportunity for us to collaborate.
+Would you be open to a brief call to explore how we can support your goals at [Prospect's Company]? I'm available for a call next week and would love to hear your thoughts.
+Looking forward to the possibility of working together.
+Best regards,
+Jason, CEO, Fluently
+
+
+That's all, now it's your turn to work. Write 3 highly diverse options for the cold outreach messages for our lead in the following format:
+Option 1\n\nOption 2\n\nOption 3
+And nothing else after the last option.
+Your work:"""
+
+        progress_text.text("✅ Starting Message Generation!")
         progress_bar.progress(100)
         time.sleep(0.5)
         progress_text.empty()
         progress_bar.empty()
 
-        # Extract messages from AI response
-        messages = extract_messages(ai_response)
-
-        # Append new messages to session state
-        st.session_state.generated_messages.extend(messages)
+        stream = openai_client.chat.completions.create(
+            model="gpt-4-turbo",
+            messages=[{"role": "user", "content": prompt}],
+            stream=True,
+        )
+        ai_response = ""
+        placeholder = st.empty()
+        for chunk in stream:
+            if chunk.choices[0].delta.content is not None:
+                ai_response += chunk.choices[0].delta.content
+                placeholder.write(ai_response)
 
     except Exception as e:
         st.error(f"An error occurred: {e}")
-
-# Function to extract messages from AI response
-def extract_messages(ai_response):
-    if '---Best Options---' in ai_response:
-        options_section = ai_response.split('---Best Options---')[1]
-        messages = options_section.strip().split('\n\n')
-        return messages
-    else:
-        return [ai_response.strip()]
 
 if __name__ == "__main__":
     main()
