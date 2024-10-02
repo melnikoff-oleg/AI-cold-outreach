@@ -1,6 +1,8 @@
 import streamlit as st
 from openai import OpenAI
 import requests
+import uuid
+import json
 import time
 import os
 
@@ -39,6 +41,53 @@ if 'selected_template' not in st.session_state:
 if 'profile_data' not in st.session_state:
     st.session_state.profile_data = None
     st.session_state.company_data = None
+
+from streamlit_cookies_manager import CookieManager
+
+# Initialize cookies
+cookies = CookieManager()
+
+if not cookies.ready():
+    st.stop()
+
+# Function to generate or retrieve user ID
+def get_user_id():
+    if 'user_id' in cookies:
+        return cookies['user_id']
+    else:
+        user_id = str(uuid.uuid4())
+        cookies['user_id'] = user_id
+        cookies.save()
+        return user_id
+
+user_id = get_user_id()
+
+# Directory to store user data
+USER_DATA_DIR = 'user_data'
+if not os.path.exists(USER_DATA_DIR):
+    os.makedirs(USER_DATA_DIR)
+
+# Function to save user data
+def save_user_data(user_id, data):
+    file_path = os.path.join(USER_DATA_DIR, f"{user_id}.json")
+    with open(file_path, 'w') as f:
+        json.dump(data, f)
+
+# Function to load user data
+def load_user_data(user_id):
+    file_path = os.path.join(USER_DATA_DIR, f"{user_id}.json")
+    if os.path.exists(file_path):
+        with open(file_path, 'r') as f:
+            return json.load(f)
+    else:
+        return {}
+
+user_data = load_user_data(user_id)
+
+if not user_data == {}:
+    st.session_state.linkedin_url = user_data['linkedin_url']
+    st.session_state.goal = user_data['goal']
+    st.session_state.example_message = user_data['example_message']
 
 # Main container
 def main():
@@ -266,6 +315,12 @@ Let's chat!""",
 def generate_messages(is_generate_more, output_box):
     # Show dynamic progress updates
     try:
+
+        user_data['linkedin_url'] = st.session_state.linkedin_url
+        user_data['goal'] = st.session_state.goal
+        user_data['example_message'] = st.session_state.example_message
+        save_user_data(user_id, user_data)
+
         if not is_generate_more:
             progress_text = st.empty()
             progress_bar = st.progress(0)
