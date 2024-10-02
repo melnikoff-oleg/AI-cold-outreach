@@ -231,14 +231,15 @@ Jason, CEO, Fluently""",
 def generate_messages(is_generate_more, output_box):
     # Show dynamic progress updates
     try:
-        progress_text = st.empty()
-        progress_bar = st.progress(0)
+        if not is_generate_more:
+            progress_text = st.empty()
+            progress_bar = st.progress(0)
 
         # Check if profile data is already fetched
         if not is_generate_more or st.session_state.profile_data is None:
             # Step 1: Fetching LinkedIn profile
             progress_text.text("🔍 Fetching LinkedIn profile...")
-            progress_bar.progress(33)
+            progress_bar.progress(0)
             headers = {'Authorization': 'Bearer ' + os.getenv("PROXYCURL_TOKEN")}
             api_endpoint = 'https://nubela.co/proxycurl/api/v2/linkedin'
             params = {'url': st.session_state.linkedin_url}
@@ -248,19 +249,13 @@ def generate_messages(is_generate_more, output_box):
                 return
             person_profile = response.json()
             st.session_state.profile_data = person_profile
-            # time.sleep(1)  # Reduced sleep time for first step
         else:
             person_profile = st.session_state.profile_data
-
-        # Step 2: Analyzing your goal
-        # progress_text.text("🎯 Analyzing your goal...")
-        # progress_bar.progress(20)
-        # time.sleep(0.5)
 
         # Step 3: Fetching company information
         if not is_generate_more or st.session_state.company_data is None:
             progress_text.text("🏢 Fetching company information...")
-            progress_bar.progress(66)
+            progress_bar.progress(50)
             company_profile = {}
             if 'experiences' in person_profile and person_profile['experiences']:
                 experiences = person_profile['experiences']
@@ -282,18 +277,9 @@ def generate_messages(is_generate_more, output_box):
             else:
                 company_profile = {}
             st.session_state.company_data = company_profile
-            # time.sleep(1)
         else:
             company_profile = st.session_state.company_data
 
-        # Step 4: Brainstorming ideas
-        # progress_text.text("💡 Brainstorming ideas...")
-        # progress_bar.progress(50)
-        # time.sleep(1)
-
-        # Step 5: Generating messages
-        # progress_text.text("✍️ Generating messages...")
-        # progress_bar.progress(65)
 
         # Build the prompt
         prompt = f"""You are a professional B2B sales rep with 10 years of experience in crafting cold outreach messages that convert. You worked with billion-dollar clients like Google, Apple, and Facebook.
@@ -345,11 +331,11 @@ Jason, CEO, Fluently
 That's all, now it's your turn to work. Write one high quality option for the cold outreach message for our lead.
 Your work:"""
 
-        progress_text.text("✅ Starting Message Generation!")
-        progress_bar.progress(100)
-        time.sleep(0.5)
-        progress_text.empty()
-        progress_bar.empty()
+        if not is_generate_more:
+            progress_bar.progress(100)
+            time.sleep(0.1)
+            progress_text.empty()
+            progress_bar.empty()
 
         stream = openai_client.chat.completions.create(
             model="gpt-4-turbo",
