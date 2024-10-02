@@ -85,14 +85,35 @@ def main():
     # Define templates with emojis
     templates = {
         "🔍 Recruiter Outreach": {
-            "linkedin_url": "https://www.linkedin.com/in/nycgareth/",
-            "goal": "Convince the candidate to join our innovative startup working on AI for healthcare.",
-            "example": "Hi [Name], I was impressed by your work in machine learning and think you'd be a great fit for our team at [Company].",
+            "linkedin_url": "https://www.linkedin.com/in/melnikoff-oleg/",
+            "goal": """I'm a tech recruiter, I'm responsible for hiring the best talent for my company. I just want to start a conversation, and make the lead interested in the offered position.
+Here is more information about our company and opened position:
+Company: Jane Street. Position: Quantitative Researcher, Trading and Research. Location: London. Description: At Jane Street, we consider trading and programming to be two ends of a continuum. As both a trading firm and a tech firm, we have room for people who love to trade, people who love to program, and people everywhere in between. Nearly all of our traders write code, and many of our software engineers trade. The role you carve out for yourself will be largely dependent on your strengths and the types of problems you enjoy thinking about.
+Researchers at Jane Street are responsible for building models, strategies, and systems that price and trade a variety of financial instruments. As a mix of the trading and software engineering roles, this work involves many things: analysing large datasets, building and testing models, creating new trading strategies, and writing the code that implements them.
+Requirements
+Be able to apply logical and mathematical thinking to all kinds of problems. Asking great questions is more important than knowing all the answers.
+Write great code. We mostly write in OCaml, so you should want to learn functional programming if you don't already have experience with it.
+Have good taste in research. The problems we work on rarely have clean, definitive answers. You should be comfortable pushing in new and unknown directions while maintaining clarity of purpose
+Think and communicate precisely and openly. We believe great solutions come from the interaction between diverse groups of people across the firm
+Fluency in English required.
+How to write the message:
+- It's a LinkedIn message, so include Subject and Body.
+- Keep messages short and to the point, ideally not more than 100 words.
+- Make an attention-grabbing opening, so the lead can't help but read it.
+- MAKE AN ATTENTION-GRABBING OPENING, SO THE LEAD CAN'T HELP BUT READ IT.
+- MAKE THE MESSAGE STAND OUT. OUR RECIPIENT GETS HUNDREDS OF MESSAGES DAILY.
+- USE EXECATLY THE STYLE THAT I PROVIDED IN THE EXAMPLES.""",
+            "example": """Example 1
+
+Subject: Mark, you deserve higher salary, and better work environment
+
+Body: hey Mark, stumbled upon your background and couldn't help but get a bit geeky-excited at the Django-to-Kubernetes spectrum you've mastered! we're ITkey, a player in OpenStack solutions, and we're on the hunt for a Python Developer. your skills in Python, FastAPI, and Kubernetes are right up our alley. 
+how about swapping your current scenery with large-scale, high-load projects and a team of top-tier professionals?""",
             "key": "Recruiter Outreach"
         },
         "💼 B2B Sales Outreach": {
-            "linkedin_url": "https://www.linkedin.com/in/nycgareth/",
-            "goal": """My name is Jason, I'm a CEO of a company called Fluently, it's an AI English coach. Fluently delivers instant feedback on your daily video calls, so you can master English every day. 
+            "linkedin_url": "https://www.linkedin.com/in/alexhormozi/",
+            "goal": """My name is Jason, I'm a CEO of Fluently, it's an AI English coach. Fluently delivers instant feedback on your daily video calls, so you can master English every day. 
 Our app helps non-native English speakers improve their language skills by providing feedback on pronunciation, grammar and vocabulary after their daily video calls.
 Right now we're focused on reaching out big international companies.
 How to write the message:
@@ -117,8 +138,22 @@ Jason, CEO, Fluently""",
         },
         "🤝 Customer Development": {
             "linkedin_url": "https://www.linkedin.com/in/nycgareth/",
-            "goal": "Understand customer needs to improve our product offerings.",
-            "example": "Hi [Name], as someone experienced in [industry], your insights would be invaluable for our product development.",
+            "goal": """My name is Pepin, I'm a CEO of a company called Annora AI, we build AI automations for manufacturing companies.
+I want to know whether they have any problems that AI can solve, making them more money or saving time.
+How to write the message:
+- It's a LinkedIn message, so include Subject and Body.
+- Keep messages short and to the point, ideally not more than 100 words.
+- Make an attention-grabbing opening, so the lead can't help but read it.
+- USE THE MOST SIMPLE ENGLISH WORDS.
+- WRITE SIMPLE, SHORT SENTENCES.
+- USE EXECATLY THE STYLE THAT I PROVIDED IN THE EXAMPLES.""",
+            "example": """Example 1
+
+Subject: manufacturing companies optimize their operations with AI
+
+Body: Hello Bobby, I appreaciate your experience in building highly efficient factories at scale.
+I think AI can help you optimize some of the day-to-day processes, like customer communication or internal trainings.
+Let's chat!""",
             "key": "Customer Development"
         },
         "✏️ Custom Message": {
@@ -165,15 +200,15 @@ Jason, CEO, Fluently""",
         )
 
         goal = st.text_area(
-            "Your Goal",
+            "Your Goal and Instructions",
             value=st.session_state.goal,
             placeholder="Describe what you want to achieve with this message..."
         )
 
         example_message = st.text_area(
-            "Example of a Good Message (Optional)",
+            "Examples of a Good Message (Optional)",
             value=st.session_state.example_message,
-            placeholder="Paste an example message here or leave blank..."
+            placeholder="Paste example messages here or leave blank..."
         )
 
         submit_button = st.form_submit_button(label='Generate Messages')
@@ -282,53 +317,38 @@ def generate_messages(is_generate_more, output_box):
 
 
         # Build the prompt
-        prompt = f"""You are a professional B2B sales rep with 10 years of experience in crafting cold outreach messages that convert. You worked with billion-dollar clients like Google, Apple, and Facebook.
-Help me write a cold outreach message for a potential client that will make them interested in conversation.
+        work_experience = ''
+        for i in range(min(2, len(person_profile['experiences']))):
+            q = person_profile['experiences'][i]
+            for el in q:
+                if q[el] is None:
+                    q[el] = 'None'
+            work_experience += f"Company: {q['company']}, Role: {q['title']}, Description: {q['description']}\n"
+        prompt = f"""You are a professional sales manager with 10 years of experience in crafting cold outreach messages that convert. You worked with billion-dollar clients like Google, Apple, and Facebook. One hour consulatation with you costs 10 thousand dollars.
+Help me write a cold outreach message that will make a recipient interested in conversation.
 I will give you:
-1) Information about the lead we are reaching out to
+1) Information about the lead that we are reaching out to
 2) My objective and requirements for this cold outreach
 3) Example messages
-Then you will:
-1) Brainstorm
-2) Write high-quality messages
+Then you will write high-quality messages
 
-Information about the lead we are reaching out to:
+Information about the lead that we are reaching out to:
 Lead's Name: {person_profile['full_name']}
-Occupation: {person_profile['occupation']}
-Summary: {person_profile['summary']}
-Information about their company:
+Lead's Occupation: {person_profile['occupation']}
+Lead's Summary: {person_profile['summary']}
+Lead's work experience: {work_experience}
+Information about the lead's current company:
 Company Name: {company_profile['name']}
 Industry: {company_profile['industry']}
 Description: {company_profile['description']}
 
 My objective and requirements for this cold outreach:
-My name is Jason, I'm a CEO of a company called Fluently, it's an AI English coach. Fluently delivers instant feedback on your daily video calls, so you can master English every day. 
-Our app helps non-native English speakers improve their language skills by providing feedback on pronunciation, grammar and vocabulary after their daily video calls.
-Right now we're focused on reaching out big international companies.
-How to write the message:
-- It's a LinkedIn message, so include Subject and Body.
-- Keep messages short and to the point, ideally not more than 100 words.
-- Make an attention-grabbing opening, so the lead can't help but read it.
-- USE THE MOST SIMPLE ENGLISH WORDS.
-- WRITE SIMPLE, SHORT SENTENCES.
-- USE EXECATLY THE STYLE THAT I PROVIDED IN THE EXAMPLES.
+{st.session_state.goal}
 
 Example messages:
+{st.session_state.example_message}
 
-Example 1
-
-Subject: Exploring Synergies in [Prospect's Industry]
-
-Body: Hi [Prospect's Name],
-I hope this message finds you well. I recently came across your profile while researching leaders in the [Prospect's Industry], and I was impressed by your work at [Prospect's Company].
-At [Your Company], we specialize in [Your Company's Solution], which has helped companies like [Example Company] achieve [Specific Benefit/Result]. Given your focus on [Prospect's Area of Interest], I believe there might be a valuable opportunity for us to collaborate.
-Would you be open to a brief call to explore how we can support your goals at [Prospect's Company]? I'm available for a call next week and would love to hear your thoughts.
-Looking forward to the possibility of working together.
-Best regards,
-Jason, CEO, Fluently
-
-
-That's all, now it's your turn to work. Write one high quality option for the cold outreach message for our lead.
+That's all, now it's your turn to work. Write one high quality cold outreach message for our lead.
 Your work:"""
 
         if not is_generate_more:
