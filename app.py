@@ -33,7 +33,7 @@ st.markdown(hide_streamlit_style, unsafe_allow_html=True)
 
 # Initialize session state variables
 if 'generated_messages' not in st.session_state:
-    st.session_state.generated_messages = []
+    st.session_state.generated_messages = ''
 if 'selected_template' not in st.session_state:
     st.session_state.selected_template = None
 if 'profile_data' not in st.session_state:
@@ -182,24 +182,22 @@ Jason, CEO, Fluently""",
     st.session_state.linkedin_url = linkedin_url
     st.session_state.goal = goal
     st.session_state.example_message = example_message
+    
+    output_box = st.empty()
+    if st.session_state.generated_messages:
+        messages_content = st.session_state.generated_messages.replace('\n', '<br>')
+        output_box.markdown(f"""
+        <div style='background-color: #F5F5F5; padding: 20px; border: 1px solid #DDDDDD; border-radius: 5px; margin-bottom: 20px;'>
+            <p style='font-size: 16px; color: #333333;'>{messages_content}</p>
+            <div style='clear: both;'></div>
+        </div>""", unsafe_allow_html=True)
 
     # Handle form submission
     if submit_button:
         if not linkedin_url.strip() or not goal.strip():
             st.error("Please provide both a LinkedIn Profile URL and your goal.")
         else:
-            generate_messages(False)  # False indicates it's not a "Generate More Messages" action
-
-    # Display generated messages
-    if st.session_state.generated_messages:
-        st.markdown("<h3 style='text-align: center; color: #333333;'>Your Personalized Message Options</h3>", unsafe_allow_html=True)
-        for idx, message in enumerate(st.session_state.generated_messages, 1):
-            message_content = message.replace('\n', '<br>')
-            st.markdown(f"""
-            <div style='background-color: #F5F5F5; padding: 20px; border: 1px solid #DDDDDD; border-radius: 5px; margin-bottom: 20px;'>
-                <p style='font-size: 16px; color: #333333;'>{message_content}</p>
-                <div style='clear: both;'></div>
-            </div>""", unsafe_allow_html=True)
+            generate_messages(False, output_box)  # False indicates it's not a "Generate More Messages" action
 
     # Provide clear actions
     if st.session_state.generated_messages:
@@ -208,12 +206,12 @@ Jason, CEO, Fluently""",
         col1, col2 = st.columns(2)
         with col1:
             if st.button("🔄 Generate More Messages"):
-                generate_messages(True)  # True indicates it's a "Generate More Messages" action
+                generate_messages(True, output_box)  # True indicates it's a "Generate More Messages" action
         with col2:
             if st.button("📝 Start New Message"):
-                st.session_state.generated_messages = []
+                st.session_state.generated_messages = ''
                 # Inputs remain the same; no need to reset them
-                st.experimental_rerun()
+                st.rerun()
 
     # Footer
     st.write("")
@@ -230,7 +228,7 @@ Jason, CEO, Fluently""",
     )
 
 # Function to generate messages using OpenAI and Proxycurl
-def generate_messages(is_generate_more):
+def generate_messages(is_generate_more, output_box):
     # Show dynamic progress updates
     try:
         progress_text = st.empty()
@@ -344,9 +342,7 @@ Best regards,
 Jason, CEO, Fluently
 
 
-That's all, now it's your turn to work. Write 3 highly diverse options for the cold outreach messages for our lead in the following format:
-Option 1\n\nOption 2\n\nOption 3
-And nothing else after the last option.
+That's all, now it's your turn to work. Write one high quality option for the cold outreach message for our lead.
 Your work:"""
 
         progress_text.text("✅ Starting Message Generation!")
@@ -360,12 +356,18 @@ Your work:"""
             messages=[{"role": "user", "content": prompt}],
             stream=True,
         )
-        ai_response = ""
-        placeholder = st.empty()
+        if not st.session_state.generated_messages == '':
+            st.session_state.generated_messages += '<br>-----------------------------------<br>'
         for chunk in stream:
             if chunk.choices[0].delta.content is not None:
-                ai_response += chunk.choices[0].delta.content
-                placeholder.write(ai_response)
+                st.session_state.generated_messages += chunk.choices[0].delta.content
+                output_box.markdown(f"""
+                    <div style='background-color: #F5F5F5; padding: 20px; border: 1px solid #DDDDDD; border-radius: 5px; margin-bottom: 20px;'>
+                        <p style='font-size: 16px; color: #333333;'>{st.session_state.generated_messages}</p>
+                        <div style='clear: both;'></div>
+                    </div>
+                """, unsafe_allow_html=True)
+        st.rerun()
 
     except Exception as e:
         st.error(f"An error occurred: {e}")

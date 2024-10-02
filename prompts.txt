@@ -144,7 +144,7 @@ Body: hey Mark, stumbled upon your background and couldn't help but get a bit ge
 how about swapping your current scenery with large-scale, high-load projects and a team of top-tier professionals?
 
 
-That's all, now it's your turn to work. Write 3 highly diverse options for the cold outreach messages for our lead in the following format:
+That's all, now it's your turn to work. Write 3 HIGHLY DIVERSE options for the cold outreach messages for our lead in the following format:
 Option 1\n\nOption 2\n\nOption 3
 And nothing else after the last option.
 Your work:
