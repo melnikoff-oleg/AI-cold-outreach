@@ -4,6 +4,7 @@ import requests
 import uuid
 import json
 import time
+import hashlib
 import os
 
 # Set OpenAI API key
@@ -14,7 +15,7 @@ st.set_page_config(
     page_title="Personalized Outreach Messages",
     page_icon="💬",
     layout="centered",
-    initial_sidebar_state="collapsed",
+    initial_sidebar_state="collapsed"
 )
 
 hide_running_indicator = """
@@ -88,6 +89,44 @@ if not user_data == {}:
     st.session_state.linkedin_url = user_data['linkedin_url']
     st.session_state.goal = user_data['goal']
     st.session_state.example_message = user_data['example_message']
+
+# Directory to store cached API responses
+CACHE_DIR = 'api_cache'
+if not os.path.exists(CACHE_DIR):
+    os.makedirs(CACHE_DIR)
+
+# Function to generate a cache file path based on the profile URL
+def get_cache_file_path(url):
+    # Create a unique filename using a hash of the URL
+    filename = hashlib.md5(url.encode('utf-8')).hexdigest() + '.json'
+    return os.path.join(CACHE_DIR, filename)
+
+# Function to parse LinkedIn profile using a third-party API with disk-based caching
+def parse_linkedin_profile(profile_url, is_person):
+    cache_file = get_cache_file_path(profile_url)
+    cache_ttl = 86400 * 7  # Cache Time-to-Live in seconds (e.g., 86400 seconds = 1 day)
+
+    # Check if cached file exists and is still valid
+    if os.path.exists(cache_file):
+        cache_age = time.time() - os.path.getmtime(cache_file)
+        if cache_age < cache_ttl:
+            # Load data from cache
+            with open(cache_file, 'r') as f:
+                return json.load(f)
+        else:
+            st.write("Cache expired. Fetching new data.")
+    
+    headers = {'Authorization': 'Bearer ' + os.getenv("PROXYCURL_TOKEN")}
+    api_endpoint = 'https://nubela.co/proxycurl/api/v2/linkedin' if is_person else 'https://nubela.co/proxycurl/api/linkedin/company'
+    params = {'url': profile_url}
+    response = requests.get(api_endpoint, params=params, headers=headers)
+    if response.status_code != 200:
+        st.error("Error fetching LinkedIn profile data.")
+        return
+    profile = response.json()
+    with open(cache_file, 'w') as f:
+            json.dump(profile, f)
+    return profile
 
 # Main container
 def main():
@@ -330,14 +369,7 @@ def generate_messages(is_generate_more, output_box):
             # Step 1: Fetching LinkedIn profile
             progress_text.text("🔍 Fetching LinkedIn profile...")
             progress_bar.progress(0)
-            headers = {'Authorization': 'Bearer ' + os.getenv("PROXYCURL_TOKEN")}
-            api_endpoint = 'https://nubela.co/proxycurl/api/v2/linkedin'
-            params = {'url': st.session_state.linkedin_url}
-            response = requests.get(api_endpoint, params=params, headers=headers)
-            if response.status_code != 200:
-                st.error("Error fetching LinkedIn profile data.")
-                return
-            person_profile = response.json()
+            person_profile = parse_linkedin_profile(st.session_state.linkedin_url, True)
             st.session_state.profile_data = person_profile
         else:
             person_profile = st.session_state.profile_data
@@ -358,12 +390,7 @@ def generate_messages(is_generate_more, output_box):
                     current_company = experiences[0]
                 company_url = current_company.get('company_linkedin_profile_url')
                 if company_url:
-                    api_endpoint = 'https://nubela.co/proxycurl/api/linkedin/company'
-                    params = {'url': company_url}
-                    headers = {'Authorization': 'Bearer ' + os.getenv("PROXYCURL_TOKEN")}
-                    response = requests.get(api_endpoint, params=params, headers=headers)
-                    if response.status_code == 200:
-                        company_profile = response.json()
+                    company_profile = parse_linkedin_profile(company_url, False)
             else:
                 company_profile = {}
             st.session_state.company_data = company_profile
