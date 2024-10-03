@@ -6,6 +6,7 @@ import json
 import time
 import hashlib
 import os
+from streamlit_cookies_manager import CookieManager
 
 # Set OpenAI API key
 openai_client = OpenAI(api_key=os.getenv("OPENAI_TOKEN"))
@@ -43,54 +44,34 @@ if 'profile_data' not in st.session_state:
     st.session_state.profile_data = None
     st.session_state.company_data = None
 
+cookies = CookieManager()
+
+if not cookies.ready():
+    st.stop()
+
+# Function to generate or retrieve user ID
+def get_user_id():
+    if 'user_id' in cookies:
+        return cookies['user_id']
+    else:
+        user_id = str(uuid.uuid4())
+        cookies['user_id'] = user_id
+        cookies.save()
+        return user_id
+
+user_id = get_user_id()
+
 # Directory to store user data
 USER_DATA_DIR = 'user_data'
 if not os.path.exists(USER_DATA_DIR):
     os.makedirs(USER_DATA_DIR)
-
-# Function to set user_id in browser's Local Storage
-def set_user_id_js(user_id):
-    js_code = f"""
-    <script>
-    localStorage.setItem("user_id", "{user_id}");
-    </script>
-    """
-    st.components.v1.html(js_code)
-
-# Function to get user_id from browser's Local Storage
-def get_user_id_js():
-    get_user_id_script = """
-    <script>
-    const userId = localStorage.getItem("user_id") || null;
-    document.body.innerHTML = `<p id="user-id">${userId}</p>`;
-    </script>
-    """
-    user_id = st.components.v1.html(get_user_id_script, height=35)
-    return user_id
-
-# Function to generate or retrieve user ID
-def get_user_id():
-    if 'user_id' in st.session_state:
-        return st.session_state['user_id']
-    else:
-        # Try to get user_id from Local Storage
-        user_id = get_user_id_js()
-        if user_id:
-            st.session_state['user_id'] = user_id
-            return user_id
-        else:
-            # Generate new user_id and store in Local Storage
-            user_id = str(uuid.uuid4())
-            st.session_state['user_id'] = user_id
-            set_user_id_js(user_id)
-            return user_id
 
 # Function to save user data
 def save_user_data(user_id):
     data = {
         'linkedin_url': st.session_state.linkedin_url,
         'goal': st.session_state.goal,
-        'example_message': st.session_state.example_message,
+        'example_message': st.session_state.example_message
     }
     file_path = os.path.join(USER_DATA_DIR, f"{user_id}.json")
     with open(file_path, 'w') as f:
