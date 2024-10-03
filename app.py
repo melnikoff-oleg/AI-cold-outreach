@@ -86,7 +86,12 @@ def get_user_id():
             return user_id
 
 # Function to save user data
-def save_user_data(user_id, data):
+def save_user_data(user_id):
+    data = {
+        'linkedin_url': st.session_state.linkedin_url,
+        'goal': st.session_state.goal,
+        'example_message': st.session_state.example_message,
+    }
     file_path = os.path.join(USER_DATA_DIR, f"{user_id}.json")
     with open(file_path, 'w') as f:
         json.dump(data, f)
@@ -102,15 +107,6 @@ def load_user_data(user_id):
 
 # Get or create a user ID
 user_id = get_user_id()
-
-# Load user data
-user_data = load_user_data(user_id)
-
-# If user data is available, populate session state
-if user_data:
-    st.session_state['linkedin_url'] = user_data.get('linkedin_url', '')
-    st.session_state['goal'] = user_data.get('goal', '')
-    st.session_state['example_message'] = user_data.get('example_message', '')
 
 # Directory to store cached API responses
 CACHE_DIR = 'api_cache'
@@ -295,13 +291,15 @@ Let's chat!""",
     # Input Fields
     st.markdown("<h3 style='text-align: center;'>Input Details</h3>", unsafe_allow_html=True)
     with st.form(key='input_form'):
+        # Load user data
+        user_data = load_user_data(user_id)
         # Get template data
         if 'linkedin_url' not in st.session_state:
-            st.session_state.linkedin_url = ""
+            st.session_state.linkedin_url = user_data.get('linkedin_url', '')
         if 'goal' not in st.session_state:
-            st.session_state.goal = ""
+            st.session_state.goal = user_data.get('goal', '')
         if 'example_message' not in st.session_state:
-            st.session_state.example_message = ""
+            st.session_state.example_message = user_data.get('example_message', '')
 
         linkedin_url = st.text_input(
             "LinkedIn Profile URL",
@@ -376,11 +374,7 @@ Let's chat!""",
 def generate_messages(is_generate_more, output_box):
     # Show dynamic progress updates
     try:
-
-        user_data['linkedin_url'] = st.session_state.linkedin_url
-        user_data['goal'] = st.session_state.goal
-        user_data['example_message'] = st.session_state.example_message
-        save_user_data(user_id, user_data)
+        save_user_data(user_id)
 
         if not is_generate_more:
             progress_text = st.empty()
