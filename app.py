@@ -173,26 +173,25 @@ def main():
     templates = {
         "🔍 Recruiter Outreach": {
             "linkedin_url": "https://www.linkedin.com/in/melnikoff-oleg/",
-            "goal": """I'm a tech recruiter, I'm responsible for hiring the best talent for my company. I just want to start a conversation, and make the lead interested in the offered position.
-Here is more information about our company and opened position:
+            "goal": """My name is Katie, I'm a Senior Recruiter at Jane Street, and I'm responsible for hiring the best talent for my company. I want to reach out to a great candidate for our open position. I just want to start a conversation and make the lead interested in the offered position.
+Here is more information about our company and open position:
 Company: Jane Street. Position: Quantitative Researcher, Trading and Research. Location: London. Description: At Jane Street, we consider trading and programming to be two ends of a continuum. As both a trading firm and a tech firm, we have room for people who love to trade, people who love to program, and people everywhere in between. Nearly all of our traders write code, and many of our software engineers trade. The role you carve out for yourself will be largely dependent on your strengths and the types of problems you enjoy thinking about.
-Researchers at Jane Street are responsible for building models, strategies, and systems that price and trade a variety of financial instruments. As a mix of the trading and software engineering roles, this work involves many things: analysing large datasets, building and testing models, creating new trading strategies, and writing the code that implements them.
-Requirements
+Researchers at Jane Street are responsible for building models, strategies, and systems that price and trade a variety of financial instruments. As a mix of trading and software engineering roles, this work involves many things: analyzing large datasets, building and testing models, creating new trading strategies, and writing the code that implements them.
+Requirements:
 Be able to apply logical and mathematical thinking to all kinds of problems. Asking great questions is more important than knowing all the answers.
 Write great code. We mostly write in OCaml, so you should want to learn functional programming if you don't already have experience with it.
 Have good taste in research. The problems we work on rarely have clean, definitive answers. You should be comfortable pushing in new and unknown directions while maintaining clarity of purpose
 Think and communicate precisely and openly. We believe great solutions come from the interaction between diverse groups of people across the firm
-Fluency in English required.
-How to write the message:
-- It's a LinkedIn message, so include Subject and Body.
+Fluency in English is required.
+How to write the cold outreach message:
+- It's a LinkedIn message, so include a Subject and a Body.
 - Keep messages short and to the point, ideally not more than 100 words.
-- Make an attention-grabbing opening, so the lead can't help but read it.
 - MAKE AN ATTENTION-GRABBING OPENING, SO THE LEAD CAN'T HELP BUT READ IT.
 - MAKE THE MESSAGE STAND OUT. OUR RECIPIENT GETS HUNDREDS OF MESSAGES DAILY.
-- USE EXECATLY THE STYLE THAT I PROVIDED IN THE EXAMPLES.""",
+- USE EXACTLY THE STYLE THAT I PROVIDED IN THE EXAMPLES.""",
             "example": """Example 1
 
-Subject: Mark, you deserve higher salary, and better work environment
+Subject: Mark, you deserve a higher salary, and a better work environment
 
 Body: hey Mark, stumbled upon your background and couldn't help but get a bit geeky-excited at the Django-to-Kubernetes spectrum you've mastered! we're ITkey, a player in OpenStack solutions, and we're on the hunt for a Python Developer. your skills in Python, FastAPI, and Kubernetes are right up our alley. 
 how about swapping your current scenery with large-scale, high-load projects and a team of top-tier professionals?""",
@@ -202,14 +201,14 @@ how about swapping your current scenery with large-scale, high-load projects and
             "linkedin_url": "https://www.linkedin.com/in/alexhormozi/",
             "goal": """My name is Jason, I'm a CEO of Fluently, it's an AI English coach. Fluently delivers instant feedback on your daily video calls, so you can master English every day. 
 Our app helps non-native English speakers improve their language skills by providing feedback on pronunciation, grammar and vocabulary after their daily video calls.
-Right now we're focused on reaching out big international companies.
+Right now we're focused on reaching out to big international companies.
 How to write the message:
-- It's a LinkedIn message, so include Subject and Body.
+- It's a LinkedIn message, so include a Subject and a Body.
 - Keep messages short and to the point, ideally not more than 100 words.
 - Make an attention-grabbing opening, so the lead can't help but read it.
 - USE THE MOST SIMPLE ENGLISH WORDS.
 - WRITE SIMPLE, SHORT SENTENCES.
-- USE EXECATLY THE STYLE THAT I PROVIDED IN THE EXAMPLES.""",
+- USE EXACTLY THE STYLE THAT I PROVIDED IN THE EXAMPLES.""",
             "example": """Example 1
 
 Subject: Exploring Synergies in [Prospect's Industry]
@@ -225,21 +224,21 @@ Jason, CEO, Fluently""",
         },
         "🤝 Customer Development": {
             "linkedin_url": "https://www.linkedin.com/in/nycgareth/",
-            "goal": """My name is Pepin, I'm a CEO of a company called Annora AI, we build AI automations for manufacturing companies.
+            "goal": """My name is Pepin, I'm a founder of a company called Annora AI, we build AI automations for manufacturing companies.
 I want to know whether they have any problems that AI can solve, making them more money or saving time.
 How to write the message:
-- It's a LinkedIn message, so include Subject and Body.
+- It's a LinkedIn message, so include a Subject and a Body.
 - Keep messages short and to the point, ideally not more than 100 words.
 - Make an attention-grabbing opening, so the lead can't help but read it.
 - USE THE MOST SIMPLE ENGLISH WORDS.
 - WRITE SIMPLE, SHORT SENTENCES.
-- USE EXECATLY THE STYLE THAT I PROVIDED IN THE EXAMPLES.""",
+- USE EXACTLY THE STYLE THAT I PROVIDED IN THE EXAMPLES.""",
             "example": """Example 1
 
 Subject: manufacturing companies optimize their operations with AI
 
-Body: Hello Bobby, I appreaciate your experience in building highly efficient factories at scale.
-I think AI can help you optimize some of the day-to-day processes, like customer communication or internal trainings.
+Body: Hello Bobby, I appreciate your experience in building highly efficient factories at scale.
+I think AI can help you optimize some of the day-to-day processes, like customer communication or internal training.
 Let's chat!""",
             "key": "Customer Development"
         },
@@ -403,8 +402,8 @@ def generate_messages(is_generate_more, output_box):
                 if q[el] is None:
                     q[el] = 'None'
             work_experience += f"Company: {q['company']}, Role: {q['title']}, Description: {q['description']}\n"
-        prompt = f"""You are a professional sales manager with 10 years of experience in crafting cold outreach messages that convert. You worked with billion-dollar clients like Google, Apple, and Facebook. One hour consulatation with you costs 10 thousand dollars.
-Help me write a cold outreach message that will make a recipient interested in conversation.
+        prompt = f"""You are a professional sales manager with 10 years of experience in crafting cold outreach messages that convert. You worked with billion-dollar clients like Google, Apple, and Facebook. 1 hour consultation with you costs 10 thousand dollars.
+Help me write a cold outreach message that will make a recipient interested in the conversation.
 I will give you:
 1) Information about the lead that we are reaching out to
 2) My objective and requirements for this cold outreach
@@ -427,7 +426,7 @@ My objective and requirements for this cold outreach:
 Example messages:
 {st.session_state.example_message}
 
-That's all, now it's your turn to work. Write one high quality cold outreach message for our lead.
+That's all, now it's your turn to work. Write one high-quality cold outreach message for our lead.
 Your work:"""
 
         if not is_generate_more:
