@@ -185,16 +185,21 @@ Think and communicate precisely and openly. We believe great solutions come from
 Fluency in English is required.
 How to write the cold outreach message:
 - It's a LinkedIn message, so include a Subject and a Body.
-- Keep messages short and to the point, ideally not more than 100 words.
+- KEEP MESSAGES SHORT AND TO THE POINT, IDEALLY NOT MORE THAN 100 WORDS.
 - MAKE AN ATTENTION-GRABBING OPENING, SO THE LEAD CAN'T HELP BUT READ IT.
-- MAKE THE MESSAGE STAND OUT. OUR RECIPIENT GETS HUNDREDS OF MESSAGES DAILY.
+- USE THE MOST SIMPLE ENGLISH WORDS.
+- WRITE SIMPLE, SHORT SENTENCES.
 - USE EXACTLY THE STYLE THAT I PROVIDED IN THE EXAMPLES.""",
             "example": """Example 1
-
 Subject: Mark, you deserve a higher salary, and a better work environment
+Body: hi Mark, stumbled upon your background and couldn't help but get a bit geeky-excited at the Django-to-Kubernetes spectrum you've mastered! we're ITkey, a player in OpenStack solutions, and we're on the hunt for a Python Developer. your skills in Python, FastAPI, and Kubernetes are right up our alley. 
+how about swapping your current scenery with large-scale, high-load projects and a team of top-tier professionals?
 
-Body: hey Mark, stumbled upon your background and couldn't help but get a bit geeky-excited at the Django-to-Kubernetes spectrum you've mastered! we're ITkey, a player in OpenStack solutions, and we're on the hunt for a Python Developer. your skills in Python, FastAPI, and Kubernetes are right up our alley. 
-how about swapping your current scenery with large-scale, high-load projects and a team of top-tier professionals?""",
+Example 2
+Josh, hi!
+Your resume pleases the eye and warms the heart - stunning therapeutic effect:) as feedback I suggest a Sr.Blockchain Engineer (Go) job in "Human" — a super-promising American startup with several million investments.
+I'd like to tell you more about the position.
+Let's discuss?)""",
             "key": "Recruiter Outreach"
         },
         "💼 B2B Sales Outreach": {
@@ -204,22 +209,26 @@ Our app helps non-native English speakers improve their language skills by provi
 Right now we're focused on reaching out to big international companies.
 How to write the message:
 - It's a LinkedIn message, so include a Subject and a Body.
-- Keep messages short and to the point, ideally not more than 100 words.
-- Make an attention-grabbing opening, so the lead can't help but read it.
+- KEEP MESSAGES SHORT AND TO THE POINT, IDEALLY NOT MORE THAN 100 WORDS.
+- MAKE AN ATTENTION-GRABBING OPENING, SO THE LEAD CAN'T HELP BUT READ IT.
 - USE THE MOST SIMPLE ENGLISH WORDS.
 - WRITE SIMPLE, SHORT SENTENCES.
 - USE EXACTLY THE STYLE THAT I PROVIDED IN THE EXAMPLES.""",
             "example": """Example 1
-
 Subject: Exploring Synergies in [Prospect's Industry]
-
 Body: Hi [Prospect's Name],
 I hope this message finds you well. I recently came across your profile while researching leaders in the [Prospect's Industry], and I was impressed by your work at [Prospect's Company].
 At [Your Company], we specialize in [Your Company's Solution], which has helped companies like [Example Company] achieve [Specific Benefit/Result]. Given your focus on [Prospect's Area of Interest], I believe there might be a valuable opportunity for us to collaborate.
 Would you be open to a brief call to explore how we can support your goals at [Prospect's Company]? I'm available for a call next week and would love to hear your thoughts.
 Looking forward to the possibility of working together.
 Best regards,
-Jason, CEO, Fluently""",
+Jason, CEO, Fluently
+
+Example 2
+Subject: quick question, John
+Body: Hi John, I've noticed that you're managing quite a big chain of restaurants. Have you ever thought about automating internal qualification and training systems?
+It might be highly time-consuming to regularly review and train the whole personnel and AI can streamline that big time.
+I'd love to discuss this with you in more detail if you're down to it.""",
             "key": "B2B Sales Outreach"
         },
         "🤝 Customer Development": {
@@ -228,18 +237,22 @@ Jason, CEO, Fluently""",
 I want to know whether they have any problems that AI can solve, making them more money or saving time.
 How to write the message:
 - It's a LinkedIn message, so include a Subject and a Body.
-- Keep messages short and to the point, ideally not more than 100 words.
-- Make an attention-grabbing opening, so the lead can't help but read it.
+- KEEP MESSAGES SHORT AND TO THE POINT, IDEALLY NOT MORE THAN 100 WORDS.
+- MAKE AN ATTENTION-GRABBING OPENING, SO THE LEAD CAN'T HELP BUT READ IT.
 - USE THE MOST SIMPLE ENGLISH WORDS.
 - WRITE SIMPLE, SHORT SENTENCES.
 - USE EXACTLY THE STYLE THAT I PROVIDED IN THE EXAMPLES.""",
             "example": """Example 1
-
 Subject: manufacturing companies optimize their operations with AI
-
-Body: Hello Bobby, I appreciate your experience in building highly efficient factories at scale.
+Body: Hi Bobby, I appreciate your experience in building highly efficient factories at scale.
 I think AI can help you optimize some of the day-to-day processes, like customer communication or internal training.
-Let's chat!""",
+Let's chat!
+
+Example 2
+Subject: John, is AI useful for manufacturing at all?
+Body: Hi John, I bet you're always looking for ways to make your manufacturing processes more efficient.
+AI is the biggest drive of optimization in the industry right now. From personnel training to quality control. 
+I'd love to discuss how it can help you, you in?""",
             "key": "Customer Development"
         },
         "✏️ Custom Message": {
@@ -426,7 +439,7 @@ My objective and requirements for this cold outreach:
 Example messages:
 {st.session_state.example_message}
 
-That's all, now it's your turn to work. Write one high-quality cold outreach message for our lead.
+That's all, now it's your turn to work. Write 3 VERY DIVERSE, OUTSTANDING, HIGH-QUALITY cold outreach message options for our lead.
 Your work:"""
 
         if not is_generate_more:
