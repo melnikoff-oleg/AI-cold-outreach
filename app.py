@@ -7,18 +7,11 @@ st.set_page_config(
     layout="centered",
     initial_sidebar_state="collapsed"
 )
-
-from openai import OpenAI
-import requests
-import uuid
 import json
 import time
 import hashlib
 import os
-from streamlit_cookies_manager import CookieManager
 
-# Set OpenAI API key
-openai_client = OpenAI(api_key=os.getenv("OPENAI_TOKEN"))
 
 hide_running_indicator = """
 <style>
@@ -36,15 +29,7 @@ hide_streamlit_style = """
             """
 st.markdown(hide_streamlit_style, unsafe_allow_html=True)
 
-# Initialize session state variables
-if 'generated_messages' not in st.session_state:
-    st.session_state.generated_messages = ''
-if 'selected_template' not in st.session_state:
-    st.session_state.selected_template = None
-if 'profile_data' not in st.session_state:
-    st.session_state.profile_data = None
-    st.session_state.company_data = None
-
+from streamlit_cookies_manager import CookieManager
 cookies = CookieManager()
 
 if not cookies.ready():
@@ -52,6 +37,7 @@ if not cookies.ready():
 
 # Function to generate or retrieve user ID
 def get_user_id():
+    import uuid
     if 'user_id' in cookies:
         return cookies['user_id']
     else:
@@ -103,6 +89,7 @@ def get_cache_file_path(url):
 
 # Function to parse LinkedIn profile using a third-party API with disk-based caching
 def parse_linkedin_profile(profile_url, is_person):
+    import requests
     cache_file = get_cache_file_path(profile_url)
     cache_ttl = 86400 * 7  # Cache Time-to-Live in seconds (e.g., 86400 seconds = 1 day)
 
@@ -130,6 +117,16 @@ def parse_linkedin_profile(profile_url, is_person):
 
 # Main container
 def main():
+
+    # Initialize session state variables
+    if 'generated_messages' not in st.session_state:
+        st.session_state.generated_messages = ''
+    if 'selected_template' not in st.session_state:
+        st.session_state.selected_template = None
+    if 'profile_data' not in st.session_state:
+        st.session_state.profile_data = None
+        st.session_state.company_data = None
+
     # Headline and Subheadline
     st.markdown(
         """
@@ -366,6 +363,8 @@ I'd love to discuss how it can help you, you in?""",
 
 # Function to generate messages using OpenAI and Proxycurl
 def generate_messages(is_generate_more, output_box):
+    from openai import OpenAI
+    openai_client = OpenAI(api_key=os.getenv("OPENAI_TOKEN"))
     # Show dynamic progress updates
     try:
         save_user_data(user_id)
