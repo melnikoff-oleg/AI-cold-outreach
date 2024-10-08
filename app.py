@@ -281,7 +281,7 @@ I'd love to discuss how it can help you, you in?""",
         )
 
         goal = st.text_area(
-            "Your Goal and Instructions",
+            "Your Goal and Instructions (make them as detailed as possible)",
             value=st.session_state.goal,
             placeholder="Describe what you want to achieve with this message..."
         )
