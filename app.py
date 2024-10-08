@@ -1,4 +1,13 @@
 import streamlit as st
+
+# Set page configuration
+st.set_page_config(
+    page_title="Personalized Outreach Messages",
+    page_icon="💬",
+    layout="centered",
+    initial_sidebar_state="collapsed"
+)
+
 from openai import OpenAI
 import requests
 import uuid
@@ -10,14 +19,6 @@ from streamlit_cookies_manager import CookieManager
 
 # Set OpenAI API key
 openai_client = OpenAI(api_key=os.getenv("OPENAI_TOKEN"))
-
-# Set page configuration
-st.set_page_config(
-    page_title="Personalized Outreach Messages",
-    page_icon="💬",
-    layout="centered",
-    initial_sidebar_state="collapsed"
-)
 
 hide_running_indicator = """
 <style>
