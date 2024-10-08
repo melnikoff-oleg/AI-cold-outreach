@@ -171,7 +171,7 @@ def main():
     templates = {
         "🔍 Recruiter Outreach": {
             "linkedin_url": "https://www.linkedin.com/in/melnikoff-oleg/",
-            "goal": """My name is Katie, I'm a Senior Recruiter at Jane Street, and I'm responsible for hiring the best talent for my company. I want to reach out to a great candidate for our open position. I just want to start a conversation and make the lead interested in the offered position.
+            "goal": """My name is Katie, I'm a Senior Recruiter at Jane Street. I want to reach out to a great candidate for our open position, to start a conversation and make the lead interested in the offered position.
 Here is more information about our company and open position:
 Company: Jane Street. Position: Quantitative Researcher, Trading and Research. Location: London. Description: At Jane Street, we consider trading and programming to be two ends of a continuum. As both a trading firm and a tech firm, we have room for people who love to trade, people who love to program, and people everywhere in between. Nearly all of our traders write code, and many of our software engineers trade. The role you carve out for yourself will be largely dependent on your strengths and the types of problems you enjoy thinking about.
 Researchers at Jane Street are responsible for building models, strategies, and systems that price and trade a variety of financial instruments. As a mix of trading and software engineering roles, this work involves many things: analyzing large datasets, building and testing models, creating new trading strategies, and writing the code that implements them.
@@ -181,13 +181,7 @@ Write great code. We mostly write in OCaml, so you should want to learn function
 Have good taste in research. The problems we work on rarely have clean, definitive answers. You should be comfortable pushing in new and unknown directions while maintaining clarity of purpose
 Think and communicate precisely and openly. We believe great solutions come from the interaction between diverse groups of people across the firm
 Fluency in English is required.
-How to write the cold outreach message:
-- It's a LinkedIn message, so include a Subject and a Body.
-- KEEP MESSAGES SHORT AND TO THE POINT, IDEALLY NOT MORE THAN 100 WORDS.
-- MAKE AN ATTENTION-GRABBING OPENING, SO THE LEAD CAN'T HELP BUT READ IT.
-- USE THE MOST SIMPLE ENGLISH WORDS.
-- WRITE SIMPLE, SHORT SENTENCES.
-- USE EXACTLY THE STYLE THAT I PROVIDED IN THE EXAMPLES.""",
+KEEP THE MESSAGE NO MORE THAN 100 WORDS.""",
             "example": """Example 1
 Subject: Mark, you deserve a higher salary, and a better work environment
 Body: hi Mark, stumbled upon your background and couldn't help but get a bit geeky-excited at the Django-to-Kubernetes spectrum you've mastered! we're ITkey, a player in OpenStack solutions, and we're on the hunt for a Python Developer. your skills in Python, FastAPI, and Kubernetes are right up our alley. 
@@ -205,13 +199,7 @@ Let's discuss?)""",
             "goal": """My name is Jason, I'm a CEO of Fluently, it's an AI English coach. Fluently delivers instant feedback on your daily video calls, so you can master English every day. 
 Our app helps non-native English speakers improve their language skills by providing feedback on pronunciation, grammar and vocabulary after their daily video calls.
 Right now we're focused on reaching out to big international companies.
-How to write the message:
-- It's a LinkedIn message, so include a Subject and a Body.
-- KEEP MESSAGES SHORT AND TO THE POINT, IDEALLY NOT MORE THAN 100 WORDS.
-- MAKE AN ATTENTION-GRABBING OPENING, SO THE LEAD CAN'T HELP BUT READ IT.
-- USE THE MOST SIMPLE ENGLISH WORDS.
-- WRITE SIMPLE, SHORT SENTENCES.
-- USE EXACTLY THE STYLE THAT I PROVIDED IN THE EXAMPLES.""",
+KEEP THE MESSAGE NO MORE THAN 100 WORDS.""",
             "example": """Example 1
 Subject: Exploring Synergies in [Prospect's Industry]
 Body: Hi [Prospect's Name],
@@ -233,13 +221,7 @@ I'd love to discuss this with you in more detail if you're down to it.""",
             "linkedin_url": "https://www.linkedin.com/in/nycgareth/",
             "goal": """My name is Pepin, I'm a founder of a company called Annora AI, we build AI automations for manufacturing companies.
 I want to know whether they have any problems that AI can solve, making them more money or saving time.
-How to write the message:
-- It's a LinkedIn message, so include a Subject and a Body.
-- KEEP MESSAGES SHORT AND TO THE POINT, IDEALLY NOT MORE THAN 100 WORDS.
-- MAKE AN ATTENTION-GRABBING OPENING, SO THE LEAD CAN'T HELP BUT READ IT.
-- USE THE MOST SIMPLE ENGLISH WORDS.
-- WRITE SIMPLE, SHORT SENTENCES.
-- USE EXACTLY THE STYLE THAT I PROVIDED IN THE EXAMPLES.""",
+KEEP THE MESSAGE NO MORE THAN 100 WORDS.""",
             "example": """Example 1
 Subject: manufacturing companies optimize their operations with AI
 Body: Hi Bobby, I appreciate your experience in building highly efficient factories at scale.
@@ -415,8 +397,12 @@ def generate_messages(is_generate_more, output_box):
                 if q[el] is None:
                     q[el] = 'None'
             work_experience += f"Company: {q['company']}, Role: {q['title']}, Description: {q['description']}\n"
-        prompt = f"""You are a professional sales manager with 10 years of experience in crafting cold outreach messages that convert. You worked with billion-dollar clients like Google, Apple, and Facebook. 1 hour consultation with you costs 10 thousand dollars.
-Help me write a cold outreach message that will make a recipient interested in the conversation.
+        with open('cold_outreach_lection.txt', 'r') as f:
+            lection = f.read()
+        prompt = f"""You are a professional sales manager with 10 years of experience in crafting cold outreach messages that convert. You worked with billion-dollar clients like Google, Apple, and Facebook. 1 hour consultation with you costs 10 thousand dollars. Here is your own lection on cold outreach:
+{lection}
+
+Use this information to help me write a cold outreach message that will make a recipient interested in the conversation.
 I will give you:
 1) Information about the lead that we are reaching out to
 2) My objective and requirements for this cold outreach
