@@ -425,6 +425,7 @@ My objective and requirements for this cold outreach:
 Example messages:
 {st.session_state.example_message}
 
+{'FOLLOW THE STYLE OF EXAMPLE MESSAGES AS CLOSE AS YOU CAN. IT IS ULTRA IMPORTANT!!!' if len(st.session_state.example_message) > 10 else ''}
 That's all, now it's your turn to work. Write 3 VERY DIVERSE, OUTSTANDING, HIGH-QUALITY cold outreach message options for our lead. And nothing else.
 Your work:"""
 
